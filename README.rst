@@ -54,3 +54,10 @@ copy&paste generated password within gooogle.com Password field::
     Password: MYSECRETPASSWORD
     3dsad3425
 
+You can also auto copy password to clipboard (UNIX and OS X)::
+
+    $: ilogin copy
+    Service: google
+    Password: MYSECRETPASSWORD
+    Password copied to clipboard
+

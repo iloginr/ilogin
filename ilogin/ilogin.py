@@ -4,6 +4,7 @@
 import os
 import sys
 import json
+import subprocess
 from hashlib import sha256
 from getpass import getpass
 
@@ -12,14 +13,31 @@ DATABASE = {
     "password": ""
 }
 
+def _clipboard(cmd, text):
+    """ Copy text to clipboard using provided cmd
+    """
+    try:
+        with subprocess.Popen(cmd, stdin=subprocess.PIPE).stdin as pipe:
+            pipe.write(text)
+    except OSError, err:
+        return err
+
+
 class ILogin(object):
     """ Usage: ilogin.py <cmd>
 
     cmd:
       - login   Get login password for service
+
       - add     Add service to ilogin
+
       - passwd  Change ilogin password.
-                YOU'LL NEED TO MANUALLY RESET ALL YOUR SERVICES PASSWORDS !!!
+                !! YOU'LL NEED TO MANUALLY RESET ALL YOUR SERVICES PASSWORDS !!
+
+      - copy    Get login password for service and copy it to clipboard
+                  - UNIX:    xsel or xclip required
+                  - OS X:    pbcopy required
+                  - Windows: Not supported yet
     """
     def __init__(self):
         self._database = None
@@ -76,7 +94,7 @@ class ILogin(object):
 
         pwd = self.database['password']
         loggedin = False
-        for tri in range(self.tries):
+        for _tri in range(self.tries):
             password = getpass("Password:")
             if sha256(password).hexdigest() != pwd:
                 print "Invalid password. Try again."
@@ -119,6 +137,30 @@ class ILogin(object):
         self._db = None
         return "Password changed"
 
+    def copy(self):
+        """ Copy password to clipboard using xsel, xclip (UNIX) or pdcopy (OS X)
+        """
+        passwd = self.login()
+
+        # xsel
+        error = _clipboard("xsel", passwd)
+        if not error:
+            return "Password copied to clipboard using xsel."
+
+        # xclip
+        error = _clipboard("xclip", passwd)
+        if not error:
+            return "Password copied to clipboard using xclip."
+
+        # pbcopy
+        error = _clipboard("pbcopy", passwd)
+        if not error:
+            return "Password copied to clipboard using pbcopy."
+
+        return ("Couldn't copy password to clipboard. "
+                "Required clipboard tools are not installed.")
+
+
 def main():
     """ Run script
     """
@@ -137,5 +179,5 @@ def main():
     else:
         sys.exit(0)
 
-if __name__=="__main__":
+if __name__ == "__main__":
     main()
