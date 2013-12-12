@@ -6,3 +6,5 @@ dist
 .project
 .pydevproject
 .idea
+*.wpu
+*.wpr

@@ -107,13 +107,18 @@ class ILogin(object):
             raise ValueError('Fuck off')
 
         settings = services[service]
+        version = settings.get('version', "1")
+        length = settings.get('length', 16)
 
-        string = "%s:%s" % (service, password)
+        string = "%s:%s:%s" % (service, password, version)
+
         pwd = sha512(string).hexdigest()
         newpwd = []
-        for idx in range(0,16):
-            start = idx*8
-            end = idx*8 + 8
+
+        for idx in range(0,length):
+            stop = 128 / length
+            start = idx*stop
+            end = idx*stop + stop
             chunk = pwd[start:end]
             if not chunk:
                 break
@@ -134,7 +139,7 @@ class ILogin(object):
             elif (idx+1) % 7 == 0 and settings.get('special', False):
                 letter = number % 14 + 33
                 letter = chr(letter)
-            else:   
+            else:
                 letter = number % 25 + 97
                 letter = chr(letter)
 
@@ -142,29 +147,62 @@ class ILogin(object):
 
         return ''.join(newpwd)
 
-    def add(self):
-        """ Add new service
+    def _add(self, service, settings):
+        """ Add new service to database
         """
-        service = raw_input("Service:")
-
-        settings = {}
-        numbers = raw_input("Use numbers [y/N]:")
-        if numbers.lower() in ("y", "yes", "true", "1"):
-            settings['numbers'] = True
-        special = raw_input("Use special characters [y/N]:")
-        if special.lower() in ("y", "yes", "true", "1"):
-            settings['special'] = True
-        caps = raw_input("Use capital letters: [y/N]:")
-        if caps.lower() in ("y", "yes", "true", "1"):
-            settings['caps'] = True
-        version = raw_input("Version:")
-        if version.strip():
-            settings['version'] = version
-
         self.database['services'][service] = settings
         json.dump(self.database, open(self.path, 'w'))
         self._db = None
 
+    def add(self, service=None, settings=None):
+        """ Add new service
+        """
+        if service:
+            return self._add(service, settings or {})
+
+        settings = {}
+
+        # (Web)Service
+        service = raw_input("Service:").strip()
+
+        advanced = raw_input("Advanced settings [y/N]:")
+        if advanced.lower() in ("y", "yes", "true", "1"):
+
+            # Password length
+            length = raw_input("Password length [16]:").strip()
+            try:
+                length = int(length)
+            except Exception, err:
+                print err
+            else:
+                settings['length'] = length
+
+            # Username
+            username = raw_input("User name [None]:").strip()
+            if username:
+                settings['user'] = username
+
+            # Use numbers
+            numbers = raw_input("Use numbers [y/N]:").strip()
+            if numbers.lower() in ("y", "yes", "true", "1"):
+                settings['numbers'] = True
+
+            # Use special chars
+            special = raw_input("Use special characters [y/N]:").strip()
+            if special.lower() in ("y", "yes", "true", "1"):
+                settings['special'] = True
+
+            # Use capital letters
+            caps = raw_input("Use capital letters: [y/N]:").strip()
+            if caps.lower() in ("y", "yes", "true", "1"):
+                settings['caps'] = True
+
+            # Password version
+            version = raw_input("Version [1]:").strip().strip()
+            if version:
+                settings['version'] = version
+
+        self._add(service, settings)
         return "Service added"
 
     def passwd(self):
