@@ -4,10 +4,10 @@ from setuptools import setup, find_packages
 import os, sys
 
 PACKAGE_NAME = "ilogin"
-PACKAGE_VERSION = "0.2"
+PACKAGE_VERSION = "2.0"
 SUMMARY = (
     "Single Sign-On script (SSO) that allows you to generate passwords "
-    "for each online service you're using."
+    "for each online service you're using. http://iloginr.com"
 )
 DESCRIPTION = (
     open("README.rst", 'r').read() + '\n\n' +
@@ -26,6 +26,7 @@ setup(name=PACKAGE_NAME,
       entry_points = {
           'console_scripts': [
               'ilogin = ilogin.ilogin:main'
+              'iloginr = ilogin.iloginr:main'
           ]},
       classifiers=[
           'Environment :: Console',
