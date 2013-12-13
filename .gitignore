@@ -1,0 +1,10 @@
+*.egg-info
+*.pyc
+*.pyo
+*.mo
+dist
+.project
+.pydevproject
+.idea
+*.wpu
+*.wpr
