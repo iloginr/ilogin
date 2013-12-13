@@ -25,8 +25,8 @@ setup(name=PACKAGE_NAME,
       packages=find_packages(exclude=['ez_setup']),
       entry_points = {
           'console_scripts': [
-              'ilogin = ilogin.ilogin:main'
-              'iloginr = ilogin.iloginr:main'
+              'ilogin_old = ilogin.ilogin:main',
+              'ilogin = ilogin.iloginr:main'
           ]},
       classifiers=[
           'Environment :: Console',

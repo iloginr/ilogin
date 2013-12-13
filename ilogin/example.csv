@@ -1,0 +1,5 @@
+Service,Password length,User Name,Use numbers,Use special Characters,Use capital letters,Version
+facebook.com,7,,,,,
+twitter.com,8,,,n,,2
+google.com,13,,,n,,
+yahoo.com,,,y,,y,
