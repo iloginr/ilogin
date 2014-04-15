@@ -13,6 +13,9 @@ to login to your service.
 The advantage of this script is that your passwords are not stored anywhere,
 never.
 
+.. image:: http://imgs.xkcd.com/comics/password_strength.png
+   :target: http://xkcd.com/936/
+
 .. contents::
 
 Install
@@ -113,4 +116,3 @@ See more options::
                       - UNIX:    xsel or xclip required
                       - OS X:    pbcopy required
                       - Windows: Not supported yet
-

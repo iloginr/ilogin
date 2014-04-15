@@ -6,8 +6,8 @@ import os, sys
 PACKAGE_NAME = "ilogin"
 PACKAGE_VERSION = "3.0"
 SUMMARY = (
-    "Single Sign-On script (SSO) that allows you to generate passwords "
-    "for each online service you're using. http://iloginr.com"
+    "Single Sign-On script (SSO) that allows you to generate unique passwords "
+    "for each online and offline service you're using."
 )
 DESCRIPTION = (
     open("README.rst", 'r').read() + '\n\n' +
