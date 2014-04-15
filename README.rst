@@ -81,7 +81,11 @@ You can import and export settings from/to CSV files::
 See more options::
 
     $: ilogin help
+    ilogin version 3.0
+
     Usage: ilogin <cmd>
+
+    For older versions use ilogin2 <cmd> OR ilogin1 <cmd>
 
         cmd:
           - login   Get login password for service (default)

@@ -24,7 +24,10 @@ def _clipboard(cmd, text):
 
 
 class ILogin(object):
-    """ Usage: ilogin.py <cmd>
+    """
+    ilogin version 1.0
+
+    Usage: ilogin <cmd>
 
     cmd:
       - login   Get login password for service

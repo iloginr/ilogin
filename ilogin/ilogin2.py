@@ -35,34 +35,40 @@ def _clipboard(cmd, text):
 
 
 class ILogin(object):
-    """ Usage: ilogin <cmd>
+    """
+    ilogin version 2.0
+
+    Usage: ilogin <cmd>
+
+    For older versions use ilogin1 <cmd>
 
     cmd:
-      - login   Get login password for service (default)
+      login   Get login password for service (default)
 
-      - user    Get login username for service
+      user    Get login username for service
 
-      - add     Add service to ilogin
+      add     Add service to ilogin
 
-      - field   Add new field
+      field   Add new field
 
-      - import  Import services from CSV file. CSV file headers (advanced options are optional):
+      import  Import services from CSV file. CSV file headers (advanced options are optional):
 
-                "Service", ["Password length", "User Name", "Use Numbers", "Use Special Charaters", "Use Capital Letters", "Version"]
-                "example.com", "16", "user@example.com", "n", "y", "false", "2"
-                "foo.bar", "", "", "", "", "", ""
-                "bar.foo", "9", "", "0", "1", "true", "7"
+              "Service", ["Password length", "User Name", "Use Numbers", "Use Special Charaters", "Use Capital Letters", "Version"]
+              "example.com", "16", "user@example.com", "n", "y", "false", "2"
+              "foo.bar", "", "", "", "", "", ""
+              "bar.foo", "9", "", "0", "1", "true", "7"
 
-      - export  Export services to CSV file.
-                !! This will not export your passwords !!
+      export  Export services to CSV file.
+              !! This will not export your passwords !!
 
-      - passwd  Change ilogin password.
-                !! ALL YOUR SERVICES PASSWORDS WILL CHANGE AND YOU'LL NEED TO MANUALLY CHANGE THEM SERVER SIDE !!
+      passwd  Change ilogin password.
+              !! ALL YOUR SERVICES PASSWORDS WILL CHANGE AND YOU'LL NEED TO MANUALLY CHANGE THEM SERVER SIDE !!
 
-      - copy    Get login password for service and copy it to clipboard
-                  - UNIX:    xsel or xclip required
-                  - OS X:    pbcopy required
-                  - Windows: Not supported yet
+      copy    Get login password for service and copy it to clipboard
+                - UNIX:    xsel or xclip required
+                - OS X:    pbcopy required
+                - Windows: Not supported yet
+
     """
     def __init__(self):
         self._database = None

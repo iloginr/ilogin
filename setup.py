@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 import os, sys
 
 PACKAGE_NAME = "ilogin"
-PACKAGE_VERSION = "2.0"
+PACKAGE_VERSION = "3.0"
 SUMMARY = (
     "Single Sign-On script (SSO) that allows you to generate passwords "
     "for each online service you're using. http://iloginr.com"
@@ -25,8 +25,10 @@ setup(name=PACKAGE_NAME,
       packages=find_packages(exclude=['ez_setup']),
       entry_points = {
           'console_scripts': [
-              'ilogin_old = ilogin.ilogin:main',
-              'ilogin = ilogin.iloginr:main'
+              'ilogin1 = ilogin.ilogin:main',
+              'ilogin2 = ilogin.ilogin2:main',
+              'ilogin3 = ilogin.ilogin3:main',
+              'ilogin = ilogin.ilogin3:main',
           ]},
       classifiers=[
           'Environment :: Console',

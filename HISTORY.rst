@@ -1,6 +1,13 @@
 Changelog
 =========
 
+3.0 - (2014-04-15)
+------------------
+* Bug fix: Fixed generation algorithm. This require you to update all your
+  passwords on server side. Use 'ilogin export' to easily see all services
+  where you used ilogin password generator. For backward compatibility use
+  ilogin2
+
 2.0 - (2013-12-13)
 ------------------
 
