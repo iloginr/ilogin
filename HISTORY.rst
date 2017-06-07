@@ -1,6 +1,10 @@
 Changelog
 =========
 
+3.1 - (2017-06-06)
+------------------
+* Feature: Add support for multiple MASTER passwords
+
 3.0 - (2014-04-15)
 ------------------
 * Bug fix: Fixed generation algorithm. This require you to update all your

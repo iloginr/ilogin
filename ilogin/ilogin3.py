@@ -21,7 +21,7 @@ DATABASE = {
         "version": {"title": "Version", "type": "int", "default": 0},
     },
     "layout": ["length", "user", "numbers", "special", "caps", "version"],
-    "password": ""
+    "password": []
 }
 
 def _clipboard(cmd, text):
@@ -36,7 +36,7 @@ def _clipboard(cmd, text):
 
 class ILogin(object):
     """
-    ilogin version 3.0
+    ilogin version 3.1
 
     Usage: ilogin <cmd>
 
@@ -61,7 +61,7 @@ class ILogin(object):
       export  Export services to CSV file.
               !! This will not export your passwords !!
 
-      passwd  Change ilogin password.
+      passwd  Add new ilogin MASTER password. You will still be able to use all previous registered MASTER passwords.
               !! ALL YOUR SERVICES PASSWORDS WILL CHANGE AND YOU'LL NEED TO MANUALLY CHANGE THEM SERVER SIDE !!
 
       copy    Get login password for service and copy it to clipboard
@@ -130,6 +130,19 @@ class ILogin(object):
                 raise SystemExit("Aborted.")
         return services[service].get('user', None)
 
+    def _login(self, password):
+        """ Login
+        """
+        pwds = self.database['password']
+        if not isinstance(pwds, list):
+            pwds = [pwds]
+
+        for pwd in pwds:
+            if sha512(password).hexdigest() == pwd:
+                return True
+
+        return False
+
     def login(self, service=None):
         """ Login
         """
@@ -145,18 +158,18 @@ class ILogin(object):
                 raise SystemExit("Aborted.")
             print "Service added. Provide master password to continue."
 
-        pwd = self.database['password']
         loggedin = False
         for _tri in range(self.tries):
             password = getpass("Password:")
-            if sha512(password).hexdigest() != pwd:
-                print "Invalid password. Try again."
+            if not self._login(password):
+                print "Master password NOT recognized. Please register it first with: ilogin passwd"
                 continue
+
             loggedin = True
             break
 
         if not loggedin:
-            raise ValueError('Fuck off')
+            raise ValueError('Invalid password. Try again later.')
 
         settings = services[service]
         version = settings.get('version', "1")
@@ -360,22 +373,34 @@ class ILogin(object):
             self._add(service, settings)
         return "Import complete"
 
+    def _passwd(self, pwd, replace=False):
+        """ Replace or add new master password
+        """
+        pwd = sha512(pwd).hexdigest()
+        if not replace:
+            new = self.database.get("password", [])
+            if not isinstance(new, list):
+                new = [new]
+            new.append(pwd)
+            pwd = new
+        else:
+            pwd = [pwd]
+
+        self.database["password"] = pwd
+        json.dump(self.database, open(self.path, 'w'), indent=2)
+        self._db = None
+
+
     def passwd(self):
         """ Change password
         """
-        old = getpass("Old password:")
-        if sha512(old).hexdigest() != self.database["password"]:
-            raise ValueError("Invalid password.")
-
         new = getpass("New password:")
         confirm = getpass("Confirm:")
         if new != confirm:
             raise ValueError("Confirmed password should match the new password")
 
-        self.database["password"] = sha512(new).hexdigest()
-        json.dump(self.database, open(self.path, 'w'),  indent=2)
-        self._db = None
-        return "Password changed"
+        self._passwd(new)
+        return "Password added"
 
     def copy(self):
         """ Copy password to clipboard using xsel, xclip (UNIX) or pdcopy (OS X)

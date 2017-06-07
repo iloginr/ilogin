@@ -51,10 +51,10 @@ Get a login for your service::
     $: ilogin
     Service: google
     Password: MYSECRETPASSWORD
-    suno owqi exar efjt
+    ntnn qumi dqbk dejs
 
 Now go to google.com > Change password and update your password with the one
-provided by this script: suno owqi exar efjt
+provided by this script: *ntnn qumi dqbk dejs*
 
 For now one, every time you want to login to google, run ilogin and
 copy&paste generated password within gooogle.com Password field::
@@ -62,7 +62,7 @@ copy&paste generated password within gooogle.com Password field::
     $: ilogin
     Service: google
     Password: MYSECRETPASSWORD
-    suno owqi exar efjt
+    ntnn qumi dqbk dejs
 
 You can also auto copy password to clipboard (UNIX and OS X)::
 
@@ -81,38 +81,55 @@ You can import and export settings from/to CSV files::
     CSV Output File Path:output.csv
     Export complete
 
+You can use multiple MASTER passwords. Useful when you want to change the master password, but still want to be able to get services password based on the older MASTER passwords::
+
+    $: ilogin passwd
+    New password: NEWSECRETPASSWORD
+    Confirm: NEWSECRETPASSWORD
+    Password added
+
+    $ ilogin
+    Service: google
+    Password: NEWSECRETPASSWORD
+    mjvk skkq nako kpkq
+
+    $: ilogin
+    Service: google
+    Password: MYSECRETPASSWORD
+    ntnn qumi dqbk dejs
+
 See more options::
 
     $: ilogin help
-    ilogin version 3.0
+       ilogin version 3.1
 
-    Usage: ilogin <cmd>
+       Usage: ilogin <cmd>
 
-    For older versions use ilogin2 <cmd> OR ilogin1 <cmd>
+       For older versions use ilogin2 <cmd> OR ilogin1 <cmd>
 
-        cmd:
-          - login   Get login password for service (default)
+       cmd:
+         login   Get login password for service (default)
 
-          - user    Get login username for service
+         user    Get login username for service
 
-          - add     Add service to ilogin
+         add     Add service to ilogin
 
-          - field   Add new field
+         field   Add new field
 
-          - import  Import services from CSV file. CSV file headers (advanced options are optional):
+         import  Import services from CSV file. CSV file headers (advanced options are optional):
 
-                    "Service", ["Password length", "User Name", "Use Numbers", "Use Special Charaters", "Use Capital Letters", "Version"]
-                    "example.com", "16", "user@example.com", "n", "y", "false", "2"
-                    "foo.bar", "", "", "", "", "", ""
-                    "bar.foo", "9", "", "0", "1", "true", "7"
+                 "Service", ["Password length", "User Name", "Use Numbers", "Use Special Charaters", "Use Capital Letters", "Version"]
+                 "example.com", "16", "user@example.com", "n", "y", "false", "2"
+                 "foo.bar", "", "", "", "", "", ""
+                 "bar.foo", "9", "", "0", "1", "true", "7"
 
-          - export  Export services to CSV file.
-                    !! This will not export your passwords !!
+         export  Export services to CSV file.
+                 !! This will not export your passwords !!
 
-          - passwd  Change ilogin password.
-                    !! ALL YOUR SERVICES PASSWORDS WILL CHANGE AND YOU'LL NEED TO MANUALLY CHANGE THEM ON SERVER SIDE !!
+         passwd  Add new ilogin MASTER password. You will still be able to use all previous registered MASTER passwords.
+                 !! BY USING A NEW MASTER PASSWORD ALL YOUR SERVICES PASSWORDS WILL CHANGE AND YOU'LL NEED TO MANUALLY CHANGE THEM SERVER SIDE !!
 
-          - copy    Get login password for service and copy it to clipboard
-                      - UNIX:    xsel or xclip required
-                      - OS X:    pbcopy required
-                      - Windows: Not supported yet
+         copy    Get login password for service and copy it to clipboard
+                   - UNIX:    xsel or xclip required
+                   - OS X:    pbcopy required
+                   - Windows: Not supported yet
