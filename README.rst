@@ -23,8 +23,12 @@ Install
 
     ::
 
-        $: easy_install ilogin
-        $: python setup.py install
+        $: pip install ilogin
+
+        or
+
+        $: git clone https://github.com/iloginr/ilogin.git
+        $: python2 setup.py install
 
 
 How it works?
