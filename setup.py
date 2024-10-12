@@ -4,7 +4,7 @@
 from setuptools import setup, find_packages
 
 PACKAGE_NAME = "ilogin"
-PACKAGE_VERSION = "4.0"
+PACKAGE_VERSION = "4.1"
 SUMMARY = (
     "Single Sign-On script (SSO) that allows you to generate unique passwords "
     "for each online and offline service you're using."

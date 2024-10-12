@@ -1,6 +1,10 @@
 Changelog
 =========
 
+4.1 - (2024-10-12)
+------------------
+* Bug fix: FileNotFoundError: [Errno 2] No such file or directory: 'HISTORY.rst'
+
 4.0 - (2024-10-12)
 ------------------
 * Feature: Python 3 support. 
