@@ -1,6 +1,11 @@
 Changelog
 =========
 
+4.0 - (2024-10-12)
+------------------
+* Feature: Python 3 support. 
+* Breaking: Drop Python 2 support.
+
 3.1 - (2017-06-06)
 ------------------
 * Feature: Add support for multiple MASTER passwords

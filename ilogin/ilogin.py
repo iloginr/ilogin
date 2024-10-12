@@ -8,18 +8,15 @@ import subprocess
 from hashlib import sha256
 from getpass import getpass
 
-DATABASE = {
-    "services": [],
-    "password": ""
-}
+DATABASE = {"services": [], "password": ""}
+
 
 def _clipboard(cmd, text):
-    """ Copy text to clipboard using provided cmd
-    """
+    """Copy text to clipboard using provided cmd"""
     try:
         with subprocess.Popen(cmd, stdin=subprocess.PIPE).stdin as pipe:
             pipe.write(text)
-    except OSError, err:
+    except OSError as err:
         return err
 
 
@@ -42,106 +39,111 @@ class ILogin(object):
                   - OS X:    pbcopy required
                   - Windows: Not supported yet
     """
+
     def __init__(self):
         self._database = None
         self._tries = 3
         self._path = ""
+        self._db = None
 
     def initialize(self):
-        """ Initialize database
-        """
+        """Initialize database"""
         password = getpass("New password:")
         db = DATABASE.copy()
-        db["password"] = sha256(password).hexdigest()
-        json.dump(db, open(self.path, 'w'))
+        db["password"] = sha256(password.encode()).hexdigest()
+        with open(self.path, "w", encoding="utf-8") as f:
+            json.dump(db, f)
 
     @property
     def path(self):
-        """ Get database path
-        """
+        """Get database path"""
         if self._path:
             return self._path
 
         path = os.path.expanduser("~/.ilogin")
         if not os.path.exists(path):
             os.mkdir(path)
-        self._path = os.path.join(path, 'config')
+        self._path = os.path.join(path, "config")
         return self._path
 
     @property
     def tries(self):
-        """ Number of tries
-        """
+        """Number of tries"""
         return self._tries
 
     @property
     def database(self):
-        """ Database
-        """
+        """Database"""
         if not self._database:
             if not os.path.exists(self.path):
                 self.initialize()
-            self._database = json.load(open(self.path, 'r'))
+            with open(self.path, "r", encoding="utf-8") as ofile:
+                self._database = json.load(ofile)
         return self._database
+
     #
     # Actions
     #
     def login(self):
-        """ Login
-        """
-        services = self.database['services']
-        service = raw_input("Service:")
-        if sha256(service).hexdigest() not in services:
-            raise ValueError("Service '%s' not supported yet. "
-                             "Try adding it first." % service)
+        """Login"""
+        services = self.database["services"]
+        service = input("Service:")
+        if sha256(service.encode()).hexdigest() not in services:
+            raise ValueError(
+                f"Service '{service}' not supported yet. "
+                f"Try adding it first."
+            )
 
-        pwd = self.database['password']
+        pwd = self.database["password"]
         loggedin = False
         for _tri in range(self.tries):
             password = getpass("Password:")
-            if sha256(password).hexdigest() != pwd:
-                print "Invalid password. Try again."
+            if sha256(password.encode()).hexdigest() != pwd:
+                print("Invalid password. Try again.")
                 continue
             loggedin = True
             break
 
         if not loggedin:
-            raise ValueError('Fuck off')
+            raise ValueError("Fuck off")
 
-        string = "%s:%s" % (service, password)
-        return sha256(string).hexdigest()[-9:]
+        string = f"{service}:{password}"
+        return sha256(string.encode()).hexdigest()[-9:]
 
     def add(self):
-        """ Add new service
-        """
-        name = raw_input("Service:")
-        service = sha256(name).hexdigest()
-        if service in self.database['services']:
+        """Add new service"""
+        name = input("Service:")
+        service = sha256(name.encode()).hexdigest()
+        if service in self.database["services"]:
             return
-        self.database['services'].append(service)
-        json.dump(self.database, open(self.path, 'w'))
+        self.database["services"].append(service)
+        with open(self.path, "w", encoding="utf-8") as ofile:
+            json.dump(self.database, ofile)
         self._db = None
         return "Service added"
 
     def passwd(self):
-        """ Change password
-        """
+        """Change password"""
         old = getpass("Old password:")
-        if sha256(old).hexdigest() != self.database["password"]:
+        if sha256(old.encode()).hexdigest() != self.database["password"]:
             raise ValueError("Invalid password.")
 
         new = getpass("New password:")
         confirm = getpass("Confirm:")
         if new != confirm:
-            raise ValueError("Confirmed password should match the new password")
+            raise ValueError(
+                "Confirmed password should match the new password"
+            )
 
-        self.database["password"] = sha256(new).hexdigest()
-        json.dump(self.database, open(self.path, 'w'))
+        self.database["password"] = sha256(new.encode()).hexdigest()
+        with open(self.path, "w", encoding="utf-8") as ofile:
+            json.dump(self.database, ofile)
         self._db = None
         return "Password changed"
 
     def copy(self):
-        """ Copy password to clipboard using xsel, xclip (UNIX) or pdcopy (OS X)
+        """
+        Copy password to clipboard using xsel, xclip (UNIX) or pdcopy (OS X)
         """
         passwd = self.login()
 
@@ -160,27 +162,29 @@ class ILogin(object):
         if not error:
             return "Password copied to clipboard using pbcopy."
 
-        return ("Couldn't copy password to clipboard. "
-                "Required clipboard tools are not installed.")
+        return (
+            "Couldn't copy password to clipboard. "
+            "Required clipboard tools are not installed."
+        )
 
 
 def main():
-    """ Run script
-    """
+    """Run script"""
     service = ILogin()
-    cmd = len(sys.argv) > 1 and sys.argv[1] or 'login'
+    cmd = len(sys.argv) > 1 and sys.argv[1] or "login"
     cmd = getattr(service, cmd, None)
     if not cmd:
-        print service.__doc__
+        print(service.__doc__)
         sys.exit(1)
 
     try:
-        print cmd()
-    except ValueError, err:
-        print err
+        print(cmd())
+    except ValueError as err:
+        print(err)
         sys.exit(1)
     else:
         sys.exit(0)
+
 
 if __name__ == "__main__":
     main()
